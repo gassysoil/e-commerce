@@ -28,9 +28,33 @@ const products_reducer = (state, action) => {
         featured_products,
       };
     case GET_PRODUCTS_ERROR:
-      return { ...state, products_loading: false, products_error: true };
+      return {
+        ...state,
+        singleProduct_loading: false,
+        singleProduct_error: true,
+      };
+    case GET_SINGLE_PRODUCT_BEGIN:
+      console.log(GET_SINGLE_PRODUCT_BEGIN);
+      return {
+        ...state,
+        singleProduct_loading: true,
+        singleProduct_error: false,
+      };
+    case GET_SINGLE_PRODUCT_SUCCESS:
+      console.log(GET_SINGLE_PRODUCT_SUCCESS);
+      return {
+        ...state,
+        singleProduct_loading: false,
+        singleProduct: action.payload,
+      };
+    case GET_SINGLE_PRODUCT_ERROR:
+      console.log(GET_SINGLE_PRODUCT_ERROR);
+      return {
+        ...state,
+        singleProduct_loading: false,
+        singleProduct_error: true,
+      };
   }
-  return state;
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
