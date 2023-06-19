@@ -15,6 +15,7 @@ import { useProductsContext } from "./products_context";
 const initialState = {
   filtered_products: [],
   all_products: [],
+  grid_view: true,
 };
 
 const FilterContext = React.createContext();
@@ -27,8 +28,16 @@ export const FilterProvider = ({ children }) => {
     dispatch({ type: LOAD_PRODUCTS, payload: products });
   }, [products]);
 
+  function setGridView() {
+    dispatch({ type: SET_GRIDVIEW });
+  }
+
+  function setListView() {
+    dispatch({ type: SET_LISTVIEW });
+  }
+
   return (
-    <FilterContext.Provider value="filter context">
+    <FilterContext.Provider value={{ ...state, setGridView, setListView }}>
       {children}
     </FilterContext.Provider>
   );
