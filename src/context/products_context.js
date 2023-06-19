@@ -61,6 +61,7 @@ export const ProductsProvider = ({ children }) => {
 
   useEffect(() => {
     fetchProducts(url);
+    console.log("fetched all products once");
   }, []);
 
   return (

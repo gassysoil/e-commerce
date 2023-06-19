@@ -22,13 +22,17 @@ const initialState = {
 const FilterContext = React.createContext();
 
 export const FilterProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(filter_reducer, initialState);
   const { products } = useProductsContext();
   // console.log(products);
+  const [state, dispatch] = useReducer(filter_reducer, initialState);
 
   useEffect(() => {
     dispatch({ type: LOAD_PRODUCTS, payload: products });
   }, [products]);
+
+  useEffect(() => {
+    dispatch({ type: SORT_PRODUCTS });
+  }, [state.sort_type]);
 
   function setGridView() {
     dispatch({ type: SET_GRIDVIEW });
