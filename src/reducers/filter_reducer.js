@@ -8,14 +8,22 @@ import {
   FILTER_PRODUCTS,
   CLEAR_FILTERS,
 } from "../actions";
+import products_reducer from "./products_reducer";
 
 const filter_reducer = (state, action) => {
   switch (action.type) {
     case LOAD_PRODUCTS:
+      console.log(action.payload);
+      let tempMax = 0;
+      for (const product of action.payload) {
+        tempMax = Math.max(tempMax, product.price);
+      }
+      console.log(tempMax);
       return {
         ...state,
         all_products: [...action.payload],
         filtered_products: [...action.payload],
+        filters: { ...state.filers, max_price: tempMax, price: tempMax },
       };
 
     case SET_GRIDVIEW:
@@ -61,6 +69,13 @@ const filter_reducer = (state, action) => {
         });
       }
       return { ...state, filtered_products: temp };
+
+    case UPDATE_FILTERS:
+      const { name, value } = action.payload;
+      return { ...state, filters: { ...state.filers, [name]: value } };
+
+    case FILTER_PRODUCTS:
+      return { ...state };
   }
   throw new Error(`No Matching "${action.type}" - action type`);
 };

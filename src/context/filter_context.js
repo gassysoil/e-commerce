@@ -17,6 +17,16 @@ const initialState = {
   all_products: [],
   grid_view: true,
   sort_type: "price-lowest",
+  filters: {
+    text: "",
+    company: "all",
+    category: "all",
+    color: "all",
+    min_price: 0,
+    max_price: 0,
+    price: 0,
+    shipping: false,
+  },
 };
 
 const FilterContext = React.createContext();
@@ -31,8 +41,9 @@ export const FilterProvider = ({ children }) => {
   }, [products]);
 
   useEffect(() => {
+    dispatch({ type: FILTER_PRODUCTS });
     dispatch({ type: SORT_PRODUCTS });
-  }, [state.sort_type]);
+  }, [products, state.sort_type, state.filters]);
 
   function setGridView() {
     dispatch({ type: SET_GRIDVIEW });
@@ -49,9 +60,24 @@ export const FilterProvider = ({ children }) => {
     dispatch({ type: UPDATE_SORT, payload: sort_type });
   }
 
+  function updateFilters(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    dispatch({ type: UPDATE_FILTERS, payload: { name, value } });
+  }
+
+  function clearFilters() {}
+
   return (
     <FilterContext.Provider
-      value={{ ...state, setGridView, setListView, updateSort }}
+      value={{
+        ...state,
+        setGridView,
+        setListView,
+        updateSort,
+        updateFilters,
+        clearFilters,
+      }}
     >
       {children}
     </FilterContext.Provider>
