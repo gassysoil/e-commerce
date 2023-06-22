@@ -14,6 +14,11 @@ const GridView = ({ products }) => {
   );
 };
 
+// The spread operator syntax, {...product}, is used to pass down all the props of
+// the product object as individual props to the Product component. This is more concise
+// than manually passing each prop one by one. Therefore, the syntax allows the Product
+// component to access all the properties of the current product in the products array.
+
 const Wrapper = styled.section`
   img {
     height: 175px;
