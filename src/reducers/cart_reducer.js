@@ -7,32 +7,61 @@ import {
 } from "../actions";
 
 const cart_reducer = (state, action) => {
-  switch (action.type) {
-    case ADD_TO_CART:
-      const { id, color, amount, product } = action.payload;
-      const tempItem = state.cart.find((item) => item.id === id + color);
-      if (tempItem) {
-        const tempCart = state.cart.map((item) => {
-          if (item.id === id + color) {
-            let newAmount = Math.min(item.amount + amount, item.max);
-            return { ...item, amount: newAmount };
+  if (action.type === ADD_TO_CART) {
+    const { id, color, amount, product } = action.payload;
+    const tempItem = state.cart.find((item) => item.id === id + color);
+    if (tempItem) {
+      const tempCart = state.cart.map((item) => {
+        if (item.id === id + color) {
+          let newAmount = Math.min(item.amount + amount, item.max);
+          return { ...item, amount: newAmount };
+        }
+        return item;
+      });
+      return { ...state, cart: tempCart };
+    } else {
+      const newItem = {
+        id: id + color,
+        name: product.name,
+        color,
+        amount,
+        price: product.price,
+        image: product.images[0].url,
+        max: product.stock,
+      };
+      return { ...state, cart: [...state.cart, newItem] };
+    }
+  }
+  if (action.type === REMOVE_CART_ITEM) {
+    const tempCart = state.cart.filter((item) => item.id !== action.payload);
+    return { ...state, cart: tempCart };
+  }
+  if (action.type === CLEAR_CART) {
+    return { ...state, cart: [] };
+  }
+  if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
+    const { id, operation } = action.payload;
+    const tempCart = state.cart.map((item) => {
+      if (item.id === id) {
+        if (operation === "increase") {
+          let newAmount = item.amount + 1;
+          if (newAmount > item.max) {
+            newAmount = item.max;
           }
-          return item;
-        });
-        return { ...state, cart: tempCart };
+          return { ...item, amount: newAmount };
+        }
+        if (operation === "decrease") {
+          let newAmount = item.amount - 1;
+          if (newAmount < 1) {
+            newAmount = 1;
+          }
+          return { ...item, amount: newAmount };
+        }
       } else {
-        const newItem = {
-          id: id + color,
-          name: product.name,
-          color,
-          amount,
-          price: product.price,
-          image: product.images[0].url,
-          max: product.stock,
-        };
-        return { ...state, cart: [...state.cart, newItem] };
+        return item;
       }
-    case REMOVE_CART_ITEM:
+    });
+    return { ...state, cart: tempCart };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
